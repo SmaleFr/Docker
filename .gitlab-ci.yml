@@ -1,0 +1,35 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+build:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
+    - docker build -t $CI_REGISTRY_IMAGE/backend ./backend
+    - docker build -t $CI_REGISTRY_IMAGE/nginx ./nginx
+    - docker build -t $CI_REGISTRY_IMAGE/monitoring ./monitoring
+  only:
+    - dev
+    - preprod
+    - prod
+
+test:
+  stage: test
+  script:
+    - echo "Tests ici (lint, unit, API, etc)"
+  only:
+    - dev
+    - preprod
+    - prod
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Déploiement docker stack deploy ici"
+  only:
+    - prod
